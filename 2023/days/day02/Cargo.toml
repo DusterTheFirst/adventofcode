@@ -1,0 +1,8 @@
+[package]
+edition = "2021"
+name    = "day02"
+version = "0.1.0"
+publish = false
+
+[dependencies]
+nom = "7.1.3"
