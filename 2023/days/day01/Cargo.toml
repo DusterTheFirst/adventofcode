@@ -1,0 +1,8 @@
+[package]
+edition = "2021"
+name    = "day01"
+publish = false
+version = "0.1.0"
+
+[dependencies]
+regex = "1.10.2"
