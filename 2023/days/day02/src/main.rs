@@ -5,6 +5,11 @@ use nom::IResult;
 fn main() {
     let file = std::fs::read_to_string("input/input").expect("input file should exist");
 
+    part_one(&file);
+    part_two(&file);
+}
+
+fn part_one(file: &str) {
     let target_view = View {
         red: 12,
         green: 13,
@@ -18,26 +23,36 @@ fn main() {
         .map(|line| {
             let (_, game) = game(line).expect("game lines should be parsable");
 
-            (
-                game.views
-                    .iter()
-                    .copied()
-                    .reduce(|max, view| View {
-                        red: view.red.max(max.red),
-                        green: view.green.max(max.green),
-                        blue: view.blue.max(max.blue),
-                    })
-                    .unwrap(),
-                game,
-            )
+            game
         })
-        .filter(|(max_view, game)| game.views.iter().copied().all(|view| view <= target_view))
-        .inspect(|(max_view, game)| println!("{:03} {max_view:02?}", game.id));
-    // .inspect(|game| println!("{game:?}"))
+        .filter(|game| game.views.iter().copied().all(|view| view <= target_view));
 
-    let id_sum: u32 = valid_games.map(|(_, game)| game.id).sum();
+    let id_sum: u32 = valid_games.map(|game| game.id).sum();
 
     dbg!(id_sum);
+}
+
+fn part_two(file: &str) {
+    let power = file
+        .lines()
+        .map(|line| {
+            let (_, game) = game(line).expect("game lines should be parsable");
+
+            let min_possible_colors = game
+                .views
+                .into_iter()
+                .reduce(|max, view| View {
+                    red: view.red.max(max.red),
+                    green: view.green.max(max.green),
+                    blue: view.blue.max(max.blue),
+                })
+                .unwrap();
+
+            min_possible_colors.red * min_possible_colors.green * min_possible_colors.blue
+        })
+        .sum::<u32>();
+
+    dbg!(power);
 }
 
 #[derive(Debug)]
